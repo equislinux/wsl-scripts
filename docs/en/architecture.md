@@ -1,10 +1,10 @@
 # Architecture
 
 This document explains how the X Linux WSL experience is put together across
-the repositories of the [xlnux](https://github.com/xlnux) organization and how
+the repositories of the [equislinux](https://github.com/equislinux) organization and how
 the pieces map to the official WSL documentation
 (https://learn.microsoft.com/windows/wsl). It is the counterpart of
-`docs/architecture.md` in the `xlnux/wsl` repository, seen from the setup
+`docs/architecture.md` in the `equislinux/wsl` repository, seen from the setup
 side.
 
 ## The end-to-end flow
@@ -13,7 +13,7 @@ X Linux for WSL is headless (terminal only). Three repositories work in
 sequence to produce a running, provisioned distribution:
 
 ```
-  xlnux/wsl                  xlnux/wsl            xlnux/wsl-scripts
+  equislinux/wsl                  equislinux/wsl            equislinux/wsl-scripts
   (Arch host)                (Windows host)       (inside the distro)
   ----------------           ----------------     ----------------
   1. build-rootfs.sh         2. install.ps1       3. install.sh (root)

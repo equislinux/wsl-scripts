@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Local smoke tests for xlnux/wsl-scripts.
+# Local smoke tests for equislinux/wsl-scripts.
 # Requires no root and no network. Runs syntax checks and exercises the
 # stages in dry-run mode with a temporary HOME.
 
@@ -143,7 +143,7 @@ check "apply creates Projects" test -d "$APPLY_HOME/Projects"
 check "apply creates .local/bin" test -d "$APPLY_HOME/.local/bin"
 check "apply creates .config/x" test -d "$APPLY_HOME/.config/x"
 
-START_MARKER='^# >>> xlnux/wsl-scripts: user environment$'
+START_MARKER='^# >>> equislinux/wsl-scripts: user environment$'
 PROFILE_BLOCKS="$(grep -c "$START_MARKER" "$APPLY_HOME/.profile")"
 check "apply keeps a single environment block (.profile)" \
     test "$PROFILE_BLOCKS" -eq 1

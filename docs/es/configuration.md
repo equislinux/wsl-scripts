@@ -1,7 +1,7 @@
 # Que configura
 
 Este repositorio gestiona la parte de usuario de X Linux en WSL. El cableado
-de sistema de WSL pertenece al rootfs de `xlnux/wsl` y no se toca:
+de sistema de WSL pertenece al rootfs de `equislinux/wsl` y no se toca:
 `/etc/wsl.conf` (systemd, red), el manejo de kernel/modulos y la habilitacion
 de interop de Windows quedan fuera del alcance de estos scripts. La unica
 excepcion es la clave `[user] default`: al crear un usuario real, este
@@ -47,7 +47,7 @@ mano o lanzar con `wsl -d <distro> -u <usuario>`.
 | Carpetas   | crea `~/.local/bin`, `~/.config/x`, `~/Projects`             |
 
 Todo el bloque de entorno se escribe entre dos marcadores
-(`# >>> xlnux/wsl-scripts: user environment` y su marcador de fin) dentro de
+(`# >>> equislinux/wsl-scripts: user environment` y su marcador de fin) dentro de
 `~/.profile` y `~/.bashrc` (con shell de login zsh el bloque va a `~/.zprofile`
 y `~/.zshrc`). Volver a ejecutar la fase reemplaza solo ese bloque, asi que tus
 ediciones en el resto de los rc se conservan.

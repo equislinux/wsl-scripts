@@ -250,12 +250,12 @@ fi
 x_step "write system note /etc/profile.d/x-wsl.sh"
 if ! x_is_dry; then
     cat >/etc/profile.d/x-wsl.sh <<'PROFILE_NOTE'
-# Managed by xlnux/wsl-scripts (stage-root).
+# Managed by equislinux/wsl-scripts (stage-root).
 # System locale/keymap/timezone/user live in:
 #   /etc/locale.conf  /etc/vconsole.conf  /etc/localtime
 #   /etc/sudoers.d/x-wsl-wheel
 # The default WSL login user is the [user] default key of /etc/wsl.conf.
-# Per-user environment is applied by stage-user.sh (xlnux/wsl-scripts).
+# Per-user environment is applied by stage-user.sh (equislinux/wsl-scripts).
 PROFILE_NOTE
 fi
 
@@ -328,7 +328,7 @@ fi
 # Imported distributions have no Windows launcher, so their default user can
 # only be changed through /etc/wsl.conf (see "Change the default user for a
 # distribution" and the [user] section of the official WSL docs). The initial
-# file shipped by xlnux/wsl keeps default=root so the first import always
+# file shipped by equislinux/wsl keeps default=root so the first import always
 # boots; once a real user exists we point that key at it. Editing only ever
 # touches the [user] default value, never the rest of the file.
 # ---------------------------------------------------------------------------

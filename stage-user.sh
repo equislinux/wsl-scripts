@@ -63,8 +63,8 @@ case "$SHELL_NAME" in
 esac
 DIRS=("$TARGET_HOME/.local/bin" "$TARGET_HOME/Projects" "$TARGET_HOME/.config/x")
 
-MARK_START='# >>> xlnux/wsl-scripts: user environment'
-MARK_END='# <<< xlnux/wsl-scripts: user environment (end)'
+MARK_START='# >>> equislinux/wsl-scripts: user environment'
+MARK_END='# <<< equislinux/wsl-scripts: user environment (end)'
 
 log_info "user: $TARGET_USER"
 log_info "home: $TARGET_HOME"

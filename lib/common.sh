@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Common helpers for the xlnux/wsl-scripts setup. Sourced by the entry points.
+# Common helpers for the equislinux/wsl-scripts setup. Sourced by the entry points.
 
 export X_DRY="${X_DRY:-0}"
 export X_AUTO="${X_AUTO:-0}"

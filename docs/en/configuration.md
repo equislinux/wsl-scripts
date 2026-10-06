@@ -1,7 +1,7 @@
 # What it configures
 
 This repository handles the user-facing part of X Linux on WSL. The
-system-level WSL wiring is owned by the `xlnux/wsl` rootfs and is left alone:
+system-level WSL wiring is owned by the `equislinux/wsl` rootfs and is left alone:
 `/etc/wsl.conf` (systemd, networking), kernel/module handling and Windows
 interop enablement are outside the scope of these scripts. The single
 exception is the `[user] default` key: once this repository creates a real
@@ -45,7 +45,7 @@ disabled, a warning explains how to set the key manually or launch with
 | Folders     | `~/.local/bin`, `~/.config/x`, `~/Projects` created          |
 
 The whole environment block is written between two markers
-(`# >>> xlnux/wsl-scripts: user environment` and its end marker) into
+(`# >>> equislinux/wsl-scripts: user environment` and its end marker) into
 `~/.profile` and `~/.bashrc` (with a zsh login shell the same block goes to
 `~/.zprofile` and `~/.zshrc`). Re-running the stage replaces only that block,
 so your own edits elsewhere in the rc files survive.

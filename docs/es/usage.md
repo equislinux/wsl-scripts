@@ -2,7 +2,7 @@
 
 Configuracion de X Linux para WSL solo desde terminal. Dos partes, ejecutadas
 desde un checkout de este repositorio tras importar el rootfs de
-[xlnux/wsl](https://github.com/xlnux/wsl).
+[equislinux/wsl](https://github.com/equislinux/wsl).
 
 El punto de entrada es `install.sh`, que se ejecuta dos veces. `setup.sh` es
 el despachador directo y acepta las mismas opciones.

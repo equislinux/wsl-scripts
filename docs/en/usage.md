@@ -1,7 +1,7 @@
 # Usage
 
 Terminal-only setup for X Linux on WSL. Two parts, run from a checkout of this
-repository after importing the rootfs from [xlnux/wsl](https://github.com/xlnux/wsl).
+repository after importing the rootfs from [equislinux/wsl](https://github.com/equislinux/wsl).
 
 The entry point is `install.sh`, run twice. `setup.sh` is the direct
 dispatcher and accepts the same options.

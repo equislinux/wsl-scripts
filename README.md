@@ -2,7 +2,7 @@
 
 Friendly, mostly automatic setup for **X Linux on WSL** (terminal only, no
 GUI). This repository turns the freshly imported rootfs from
-[xlnux/wsl](https://github.com/xlnux/wsl) into a usable X Linux system: a
+[equislinux/wsl](https://github.com/equislinux/wsl) into a usable X Linux system: a
 regular user with sudo, sane locale/keymap/timezone values and a comfortable
 terminal environment.
 
@@ -15,7 +15,7 @@ The importable rootfs and the first-run setup live in two repositories that
 are used in order:
 
 ```
-xlnux/wsl                     xlnux/wsl-scripts
+equislinux/wsl                     equislinux/wsl-scripts
 --------------                --------------------
 build-rootfs.sh       ->      import on Windows (install.ps1)
 (minimal Arch rootfs)         then, inside the distro:
@@ -36,7 +36,7 @@ repository that the future user can read (for example
 `/opt/x-wsl-scripts`, **not** `/root`):
 
 ```bash
-git clone https://github.com/xlnux/wsl-scripts /opt/x-wsl-scripts
+git clone https://github.com/equislinux/wsl-scripts /opt/x-wsl-scripts
 cd /opt/x-wsl-scripts
 ./install.sh
 ```
@@ -75,7 +75,7 @@ legacy/             previous WSL bootstrap kept for review (not part of the
 ```
 
 The system-level WSL wiring (systemd, networking, the initial `/etc/wsl.conf`)
-belongs to the `xlnux/wsl` rootfs and is not recreated here. This repository
+belongs to the `equislinux/wsl` rootfs and is not recreated here. This repository
 only ever adjusts the `[user] default` key of `/etc/wsl.conf` once it has
 created a real user, which is the documented way to change the default user of
 an imported distribution.
@@ -106,4 +106,4 @@ helpers, both stages in dry-run mode and the real user stage in a temporary
   stage changes.
 - `docs/en/architecture.md` / `docs/es/architecture.md` - end-to-end flow and
   mapping to the official WSL documentation.
-- [xlnux/wsl](https://github.com/xlnux/wsl) - builds the importable rootfs.
+- [equislinux/wsl](https://github.com/equislinux/wsl) - builds the importable rootfs.
