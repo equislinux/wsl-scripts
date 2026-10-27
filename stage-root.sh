@@ -15,10 +15,11 @@ usage() {
     cat <<'EOF'
 Usage: stage-root.sh [options]
 
-Configures the WSL system: base tools, locale, keyboard, timezone and the
-sudo user. Run as root (a fresh WSL import boots as root). Values can also
-be given through X_LOCALE, X_KEYMAP, X_TIMEZONE, X_USER, X_SHELL, X_SUDO,
-X_INSTALL and X_SET_DEFAULT_USER environment variables.
+Configures the WSL system: base tools, the X identity (x-release), locale,
+keyboard, timezone and the sudo user. Run as root (a fresh WSL import boots
+as root). Values can also be given through X_LOCALE, X_KEYMAP, X_TIMEZONE,
+X_USER, X_SHELL, X_SUDO, X_INSTALL and X_SET_DEFAULT_USER environment
+variables.
 
 Options:
   --locale LOCALE   Locale to enable and set as LANG (default en_US.UTF-8).
@@ -30,7 +31,7 @@ Options:
   --shell SHELL     Login shell for the user: zsh or bash (default zsh).
   --sudo POLICY     Sudo policy: nopasswd (default, recommended for WSL) or
                     password (prompted interactively).
-  --no-install      Do not install base tools with pacman.
+  --no-install      Do not install base tools or the X identity layer (x-release).
   -h, --help        Show this help.
 
 Environment:
@@ -195,6 +196,38 @@ elif x_is_dry; then
     log_info "plan: skip base tools install"
 else
     log_info "not Arch or install disabled; base tools left untouched"
+fi
+
+# ---------------------------------------------------------------------------
+# X Linux package layer: enable the signed [x] repository and install
+# x-release, the package that makes the distribution report "X Linux"
+# (/usr/lib/os-release and the branding hooks). Without it the rootfs keeps
+# the stock Arch identity even though everything else came from X.
+# ---------------------------------------------------------------------------
+
+if [[ "$INSTALL_TOOLS" == 1 ]] && x_have pacman; then
+    if ! x_repo_arch_supported; then
+        log_warn "no [x] repository for $(uname -m); keeping the stock Arch identity"
+    elif x_is_dry; then
+        x_plan "enable [x] (${X_REPO_URL}) and install x-release"
+    else
+        x_step "enable the [x] repository and trust its key"
+        if x_repo_enable; then
+            log_ok "[x] enabled and trusted"
+            log_info "installing the X Linux identity (x-release)"
+            if pacman -Sy --noconfirm >/dev/null 2>&1 &&
+                pacman -S --noconfirm --needed x-release >/dev/null 2>&1; then
+                log_ok "x-release installed; /usr/lib/os-release reports X Linux"
+            else
+                log_warn "could not install x-release from [x] (offline?); the system still reports Arch Linux"
+                log_warn "run again when online, or: sudo pacman -Sy x-release"
+            fi
+        else
+            log_warn "could not enable [x] (offline or key mismatch); keeping the stock Arch identity"
+        fi
+    fi
+elif x_is_dry; then
+    log_info "plan: skip the [x] repository and x-release"
 fi
 
 # ---------------------------------------------------------------------------

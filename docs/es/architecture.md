@@ -18,10 +18,11 @@ secuencia para producir una distribucion corriendo y aprovisionada:
   ----------------           ----------------     ----------------
   1. build-rootfs.sh         2. install.ps1       3. install.sh (root)
      pacstrap de un rootfs      wsl --import         fase de sistema:
-     Arch minimo, con un         --version 2          locale, keymap,
-     /etc/wsl.conf inicial       (WSL 2)              zona horaria,
-     (systemd activo, [user]     wsl --set-default    herramientas,
-     default=root, [time])                            usuario con sudo;
+     Arch minimo + identidad     --version 2          locale, keymap,
+     X (x-release desde [x]),    (WSL 2)              zona horaria,
+     con /etc/wsl.conf inicial   wsl --set-default    herramientas, usuario
+     (systemd activo, [user]                          con sudo, [x] +
+     default=root, [time])                            x-release si falta;
                                                       fija [user] default
                                   4. exit, relanza       5. install.sh (usuario)
                                                                   fase de usuario:
@@ -43,6 +44,7 @@ Cada repositorio es independiente, con su propio origin y publicacion en
 | Ajustes WSL por distro         | `wsl`          | `templates/wsl.conf` -> `/etc/wsl.conf`     |
 | Ejemplo de ajustes globales    | `wsl`          | `templates/.wslconfig` (lado host)          |
 | Aprovisionamiento de sistema   | `wsl-scripts`  | `stage-root.sh` (via `install.sh`)          |
+| Identidad X (`[x]` + `x-release`) | `wsl-scripts` | `x_repo_enable` en `stage-root.sh`         |
 | Aprovisionamiento de usuario   | `wsl-scripts`  | `stage-user.sh` (via `install.sh`)          |
 
 ## Correspondencia con la documentacion oficial de WSL
@@ -103,6 +105,11 @@ viven en `lib/common.sh` y estan cubiertas por `test/smoke.sh`.
   seccion `[time]` de `/etc/wsl.conf`.
 - Instala herramientas base con pacman (`sudo git curl wget`, mas el shell de
   login si no esta).
+- Habilita el repositorio firmado `[x]` (entrada en `/etc/pacman.conf`, clave
+  del proyecto fijada por huella y firmada localmente) e instala `x-release`,
+  de modo que `/etc/os-release` se reporte como X Linux y `pacman -Syu` lo
+  mantenga actualizado. Se omite con `--no-install`, en sistemas no x86_64 o
+  sin red (se avisa y el setup continua).
 - Crea (o asegura) el usuario, lo anade a `wheel`, fija su shell de login y
   escribe la politica de sudo en `/etc/sudoers.d/x-wsl-wheel` (`nopasswd` por
   defecto, recomendado para un equipo WSL personal).
