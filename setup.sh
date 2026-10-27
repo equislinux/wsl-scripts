@@ -37,7 +37,7 @@ System options are forwarded to stage-root.sh:
   --user NAME       User to create or ensure with sudo.
   --shell SHELL     Login shell: zsh or bash.
   --sudo POLICY     Sudo policy: nopasswd or password.
-  --no-install      Skip installing base tools with pacman.
+  --no-install      Skip installing base tools and the X identity layer (x-release).
 
 Environment:
   X_AUTO=1          Use defaults without prompting.

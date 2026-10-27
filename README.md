@@ -6,6 +6,12 @@ GUI). This repository turns the freshly imported rootfs from
 regular user with sudo, sane locale/keymap/timezone values and a comfortable
 terminal environment.
 
+The system stage also enables the signed `[x]` repository and installs
+`x-release` when the imported rootfs does not have it yet, so an existing
+distribution starts reporting itself as X Linux (and keeps doing so through
+`pacman -Syu`) without rebuilding the tarball. `--no-install` skips this along
+with the base tools.
+
 The scripts ask plain-text questions (gum is used automatically when it is
 installed) and degrade to unattended mode with `X_AUTO=1`.
 
@@ -18,8 +24,8 @@ are used in order:
 equislinux/wsl                     equislinux/wsl-scripts
 --------------                --------------------
 build-rootfs.sh       ->      import on Windows (install.ps1)
-(minimal Arch rootfs)         then, inside the distro:
-                              1. ./install.sh as root  (system stage)
+(minimal Arch rootfs +        then, inside the distro:
+ X identity from [x])         1. ./install.sh as root  (system stage)
                               2. exit, relaunch
                               3. ./install.sh as user  (user stage)
 ```

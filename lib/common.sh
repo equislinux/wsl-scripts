@@ -171,6 +171,61 @@ x_wsl_conf_set_default() {
     mv -- "$tmp" "$file"
 }
 
+# ---------------------------------------------------------------------------
+# [x] repository helpers (the X Linux package layer).
+#
+# The imported rootfs is bootstrapped from the stock Arch repositories. The X
+# identity (x-release: /usr/lib/os-release, branding hooks) lives in the signed
+# [x] repository; enabling it also makes `pacman -Syu` keep the distro branded
+# and delivers the rest of the X packages (xfetch-bin, xtop-git, x-scripts).
+# Override X_REPO_URL / X_REPO_KEY_FPR for mirrors or local testing.
+# ---------------------------------------------------------------------------
+
+X_REPO_URL="${X_REPO_URL:-https://equislinux.github.io/x-repo/repo/x86_64}"
+X_REPO_KEY_FPR="${X_REPO_KEY_FPR:-D6C5084942318609F12B2F490C860E4E6A638BBB}"
+
+# The published [x] path is architecture-specific; only x86_64 exists today.
+x_repo_arch_supported() {
+    [[ "$(uname -m)" == "x86_64" ]]
+}
+
+x_repo_configured() {
+    grep -q '^\[x\]' /etc/pacman.conf 2>/dev/null
+}
+
+x_repo_trusted() {
+    x_have pacman-key && pacman-key --list-keys "$X_REPO_KEY_FPR" >/dev/null 2>&1
+}
+
+# Enable and trust the signed [x] repository. Idempotent; writes the stanza to
+# /etc/pacman.conf only when missing and imports/locally signs the project key.
+# Returns non-zero (caller decides) when offline or the key does not match the
+# pinned fingerprint.
+x_repo_enable() {
+    local key=/etc/pacman.d/x-repo.pub fpr
+    if ! x_repo_configured; then
+        printf '\n[x]\n# Trusted by equislinux/wsl-scripts (%s).\nSigLevel = Required\nServer = %s\n' \
+            "$key" "$X_REPO_URL" >>/etc/pacman.conf
+    fi
+    if x_repo_trusted; then
+        return 0
+    fi
+    if [[ ! -f "$key" ]]; then
+        x_have curl || return 1
+        curl -fsSL "${X_REPO_URL%/}/signing.pub" -o "$key" || return 1
+        chmod 0644 "$key"
+    fi
+    fpr="$(gpg --with-colons --show-keys "$key" 2>/dev/null | awk -F: '/^fpr:/{print $10; exit}')"
+    [[ "$fpr" == "$X_REPO_KEY_FPR" ]] || return 1
+    # Older imports may carry an uninitialized or unpopulated keyring (the
+    # original rootfs build could not locally sign): repair it before use.
+    x_have pacman-key || return 1
+    pacman-key --init >/dev/null 2>&1 || return 1
+    pacman-key --populate archlinux >/dev/null 2>&1 || true
+    pacman-key --add "$key" >/dev/null 2>&1 || return 1
+    pacman-key --lsign-key "$fpr" >/dev/null 2>&1 || return 1
+}
+
 # User stage: must run as a regular user. When invoked as root through sudo,
 # drop back to the invoking user before applying anything.
 x_require_user() {

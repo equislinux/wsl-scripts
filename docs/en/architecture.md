@@ -18,10 +18,12 @@ sequence to produce a running, provisioned distribution:
   ----------------           ----------------     ----------------
   1. build-rootfs.sh         2. install.ps1       3. install.sh (root)
      pacstrap of a minimal      wsl --import         system stage:
-     Arch rootfs, with a         --version 2          locale, keymap,
-     default /etc/wsl.conf       (WSL 2)              timezone, tools,
-     (systemd on, [user]         wsl --set-default    sudo user; pins
-     default=root, [time])                            [user] default
+     Arch rootfs + the X         --version 2          locale, keymap,
+     identity (x-release         (WSL 2)              timezone, tools,
+     from [x]), with a           wsl --set-default    sudo user, [x] +
+     default /etc/wsl.conf                            x-release if absent;
+     (systemd on, [user]                              pins [user] default
+     default=root, [time])
                                   4. exit, relaunch
         out/x-wsl-rootfs.tar.gz    5. install.sh (user)
                                           user stage: shell, env, folders
@@ -41,6 +43,7 @@ repository is independent, with its own origin and release on `main`.
 | Per-distro WSL settings        | `wsl`            | `templates/wsl.conf` -> `/etc/wsl.conf`      |
 | Global WSL 2 settings example  | `wsl`            | `templates/.wslconfig` (host-side)           |
 | System provisioning            | `wsl-scripts`    | `stage-root.sh` (via `install.sh`)           |
+| X identity (`[x]` + `x-release`) | `wsl-scripts`  | `x_repo_enable` in `stage-root.sh`           |
 | User provisioning              | `wsl-scripts`    | `stage-user.sh` (via `install.sh`)           |
 
 ## Mapping to the official WSL documentation
@@ -100,6 +103,11 @@ helper functions that read and rewrite only the `[user] default` value live in
   section in `/etc/wsl.conf`.
 - Installs base tools with pacman (`sudo git curl wget`, plus the login shell
   when it is not already present).
+- Enables the signed `[x]` repository (stanza in `/etc/pacman.conf`, project
+  key pinned by fingerprint and locally signed) and installs `x-release`, so
+  `/etc/os-release` reports X Linux and `pacman -Syu` keeps it updated. Skipped
+  with `--no-install`, on non-x86_64 systems, or when offline (a warning is
+  printed and the setup continues).
 - Creates (or ensures) the user, adds it to `wheel`, sets its login shell and
   writes the sudo policy to `/etc/sudoers.d/x-wsl-wheel` (`nopasswd` by
   default, recommended for a personal WSL box).
